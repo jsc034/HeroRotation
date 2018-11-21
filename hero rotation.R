@@ -9,20 +9,22 @@ file <- "~/GitHub/HeroRotation/HotsData - Rotation.csv"
 DFA <- read_csv(file)  
   
 #column organization
-ignoreC <- 14 #this can change
-chunk3 <- 50 #this can change
+ignoreC <- 23 #this can change
+chunk3 <- 94-5 #this can change
 chunk2 <- 66
 chunk1 <- 26
 #row organization, # of each class WILL change
-warrior <- 19
-assassin <- 31
-support <- 14
+warrior <- 21
+assassin <- 34
+support <- 16
 specialist <- 12
 multiclass <- 1
 #newest hero index (has not been free for the 1st time)
-bad <- 37 #who: maiev
+bad <- 44 #row number in DF, (not DFA) #who: orphea
 
 indexC_remove <- -1*c(2:(1+ignoreC),1+ignoreC+chunk3+1,1+ignoreC+chunk3+1+chunk2+1,1+ignoreC+chunk3+1+chunk2+1+chunk1+1)
+#change bottom indexC_remove with new role system
+indexC_remove <- c(-1:-18,-20:-24,-114,-181,-208) #################################################################################OLD ROLE SYSTEM
 indexR_remove <- -1*c(warrior+1,warrior+1+assassin+1,warrior+1+assassin+1+support+1,warrior+1+assassin+1+support+1+specialist+1,(warrior+1+assassin+1+support+1+specialist+1+multiclass+1):nrow(DFA))
 DFB <- DFA[indexR_remove,indexC_remove] #more compact version of dataframe I am working with: removed seperating rows & empty columns at begining & count columns
 #a <-c(2:ignoreC,1+ignoreC+chunk3+1,1+ignoreC+chunk3+1+chunk2+1,1+ignoreC+chunk3+1+chunk2+1+chunk1+1)
@@ -35,7 +37,7 @@ for(i in 1:nrow(DF)){
 }
 
 par(mfrow=c(3,3))
-# Analysis ###############################################################################################################################################
+#Analysis ###############################################################################################################################################
 
 as.numeric(DF[1,2:ncol(DF)]) #vector of 0/1s
 colnames(DF)
@@ -51,7 +53,7 @@ for(i in 2:length(weeks_str)){
 }
 weeks <- rev(weeks)
 
-for(name in 1:9){ #:nrow(DF)){ #looping over all characters
+for(name in 1:nrow(DF)){ #looping over all characters
 if(name==bad){next}
 #finding the index when the character is 1st on free rotation
 entries <- as.numeric(DF[name,2:ncol(DF)])
