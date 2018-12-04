@@ -22,6 +22,7 @@ multiclass <- 1
 #newest hero index (has not been free for the 1st time)
 bad <- 44 #row number in DF, (not DFA) #who: orphea
 
+#creating a new DF to work with (NEEDS TO BE UPDATED WITH NEW ROLE REWORK!!!!!)
 indexC_remove <- -1*c(2:(1+ignoreC),1+ignoreC+chunk3+1,1+ignoreC+chunk3+1+chunk2+1,1+ignoreC+chunk3+1+chunk2+1+chunk1+1)
 #change bottom indexC_remove with new role system
 indexC_remove <- c(-1:-18,-20:-24,-114,-181,-208) #################################################################################OLD ROLE SYSTEM
@@ -36,7 +37,12 @@ for(i in 1:nrow(DF)){
   }
 }
 
+#role averages (NEEDS TO BE UPDATED WITH NEW ROLE REWORK!!!!!)
+DFB <- DFA[(nrow(DFA)-4):nrow(DFA),indexC_remove]
+
+
 par(mfrow=c(3,3))
+#########################################################################################################################################################
 #Analysis ###############################################################################################################################################
 
 as.numeric(DF[1,2:ncol(DF)]) #vector of 0/1s
@@ -53,7 +59,7 @@ for(i in 2:length(weeks_str)){
 }
 weeks <- rev(weeks)
 
-for(name in 1:nrow(DF)){ #looping over all characters
+for(name in 1:9){#nrow(DF)){ #looping over all characters
 if(name==bad){next}
 #finding the index when the character is 1st on free rotation
 entries <- as.numeric(DF[name,2:ncol(DF)])
@@ -88,6 +94,23 @@ abline(v=as.Date('3/14/2017',"%m/%d/%Y"),col='blue',lw=1,lty=3) #rotation increa
 par(mfrow=c(1,1))
 
 
+
+#Role analysis - Moving Average
+for(role in 1:5){
+  role_weekly_count <- as.numeric(DFB[role,-1])
+  role_weekly_count <- rev(role_weekly_count)
+  role_weekly_count <- role_weekly_count[!is.na(role_weekly_count)] #for roles with NA values
+  
+  role_MA <- cumsum(role_weekly_count)/1:length(role_weekly_count)
+  
+  if(role==5){weeks <- weeks[-1:-76]} #special case: multiclass
+  
+  title <- sprintf('%s Free Rotation Moving Average',DFB[role,1])
+  lower_lim <- as.Date("6/2/2015","%m/%d/%Y"); upper_lim <- weeks[length(weeks)]
+  plot(weeks,role_MA,main=title,ylab='MA of Role on Free Rotation',xlim=c(lower_lim,upper_lim),las=1)
+  abline(v=as.Date('12/8/2015',"%m/%d/%Y"),col='red',lw=1,lty=3) #rotation increased from 7->10
+  abline(v=as.Date('3/14/2017',"%m/%d/%Y"),col='blue',lw=1,lty=3) #rotation increased from 10->14
+}
 
 
 
